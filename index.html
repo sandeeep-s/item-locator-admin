@@ -1,0 +1,40 @@
+<!doctype html>
+<html ng-app="itemAdmin">
+<head>
+<title>Hello AngularJS</title>
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+<script src="itemcontroller.js"></script>
+</head>
+
+<body>
+	<div ng-controller="itemController" class="w3-container">
+		<table class="w3-table w3-bordered w3-striped">
+			<tr>
+				<th>Item Name</th>
+				<th>Item Code</th>
+			</tr>
+			<tr ng-repeat="item in items">
+				<td>{{item.name}}</td>
+				<td>{{item.code}}</td>
+			</tr>
+		</table>
+		<br>
+		<button class="w3-btn w3-green w3-ripple">Create New Item</button>
+
+		<form>
+			<br> <label>Name:</label> <input type="text"
+				placeholder="Item Name" ng-model="iName"> <br> <label>Code:</label>
+			<input type="text" placeholder="Item Code" ng-model="iCode">
+
+			<br>
+			<button ng-click="saveItem()">Save</button>
+
+		</form>
+
+	</div>
+
+
+</body>
+</html>
