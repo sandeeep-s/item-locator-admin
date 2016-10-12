@@ -1,0 +1,15 @@
+<table class="w3-table w3-bordered w3-striped">
+	<tr>
+		<th>Item Name</th>
+		<th>Item Code</th>
+		<th></th>
+	</tr>
+	<tr ng-repeat="item in items">
+		<td>{{item.name}}</td>
+		<td>{{item.code}}</td>
+		<td><button ng-click="deleteItem(item._links.self.href)">Delete</button></td>
+	</tr>
+</table>
+<br>
+<button ng-click="go('/create-item')" class="w3-btn w3-green w3-ripple">Create New Item</button>
+
