@@ -37,10 +37,7 @@ app.controller("itemController", function($scope, $http, $location) {
 
 	$scope.deleteItem = function(url) {
 
-		$http({
-			method : "DELETE",
-			url : url
-		});
+		$http.delete(url);
 
 	}
 
