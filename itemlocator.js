@@ -26,17 +26,10 @@ app.controller("itemController", function($scope, $http, $location) {
 		};
 
 		if (cmd == "add") {
-			$http({
-				method : "POST",
-				url : "http://localhost:8090/items",
-				data : dataObject
-			});
+			var url = "http://localhost:8090/items";
+			$http.post(url, dataObject);
 		} else {
-			$http({
-				method : "PUT",
-				url : url,
-				data : dataObject
-			});
+			$http.put(url, dataObject);
 		}
 
 		$location.path("/");
