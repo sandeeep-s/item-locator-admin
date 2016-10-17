@@ -1,16 +1,22 @@
 angular.module("itemAdmin.controllers", [])
 
-.controller("itemController1", function($scope, $http, $location, Item) {
+.controller("itemController1", function($scope, $http, $location, root) {
 
-	$scope.item = new Item();
+  $scope.root = root;
+  $scope.type = root.$links('items')[0];
+  $scope.resource = null;
 
-  $scope.items = Item.query(function(){
-    console.log(items);
+  var updateResource = function(r){
+    $scope.resource = r;
+    $scope.items = r.$followAll('items');
+  };
+
+  $scope.$watch('type', function(type){
+    updateResource(type.follow());
   });
 
 	$scope.saveItem = function(cmd, url) {
 
-    $scope.item = new Item();
 		var dataObject = {
 			name : $scope.item.name,
 			code : $scope.item.code
