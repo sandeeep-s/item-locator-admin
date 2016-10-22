@@ -18,11 +18,8 @@
 
 <body>
 
-	<div ng-app="itemAdmin" class="w3-container">
-
-	<a href="#/">Main</a>
-	<a href="#create-item">Create Item</a>
-	<div ng-view></div>
+	<div ng-app="itemAdmin" class="w3-container" ng-controller="MainController">
+		<div ng-view></div>
 	</div>
 </body>
 </html>

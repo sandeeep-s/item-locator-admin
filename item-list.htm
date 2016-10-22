@@ -8,10 +8,9 @@
 	<tr ng-repeat="item in items">
 		<td>{{item.name}}</td>
 		<td>{{item.code}}</td>
-		<td><button ng-click="deleteItem(item._links.self.href)">Delete</button></td>
+		<td><button ng-click="deleteItem(item)">Delete</button></td>
 		<td><button ng-click="openEditForm(item)">Edit</button></td>
 	</tr>
 </table>
 <br>
 <button ng-click="openAddForm()" class="w3-btn w3-green w3-ripple">Create New Item</button>
-

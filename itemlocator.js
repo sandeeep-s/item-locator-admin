@@ -1,32 +1,45 @@
-var app = angular.module("itemAdmin", [ "ngRoute","ngResource", "hrCore", "hrHal", "hrSiren", "hrLinkHeader","hrJson"]);
-
-app.config(function ($routeProvider, $locationProvider) {
-    $routeProvider
-      .otherwise({
-        redirectTo: '/'
-      });
-
-  });
+var app = angular.module("itemAdmin", [ "ngRoute","ngResource", "hrCore", "hrHal"]);
 
 app.config(function($routeProvider) {
 
 	$routeProvider.when('/', {
 		templateUrl : "item-list.htm",
-		controller : 'itemController1',
+		controller : 'itemListController',
 		resolve : {
 			root : function(hrRoot){
 				return hrRoot("http://localhost:8090").follow().$promise;
 			}
 		}
-	});
+	}).when('/create-item',{
+		templateUrl : "create-item.htm",
+		controller : 'itemController',
+		resolve : {
+			root : function(hrRoot){
+				return hrRoot("http://localhost:8090").follow().$promise;
+			}
+		}
+	}).when('/modify-item',{
+		templateUrl : "modify-item.htm",
+		controller : 'itemEditController',
+		resolve : {
+			root : function(hrRoot){
+				return hrRoot("http://localhost:8090").follow().$promise;
+			}
+		}
+	}).otherwise({
+    redirectTo: '/'
+  });
 
 });
 
-app.controller("itemController1", function($scope, $http, root) {
 
-  $scope.root = root;
-  $scope.type = root.$links('items')[0];
-  $scope.resource = null;
+app.controller("MainController", ['$scope', function($scope){
+  $scope.item = {};
+}]);
+
+
+app.controller("itemListController", ['$scope','$location','root',function($scope, $location, root){
+  $scope.type = root.$link('items');
 
   var updateResource = function(r){
     $scope.resource = r;
@@ -37,43 +50,58 @@ app.controller("itemController1", function($scope, $http, root) {
     updateResource(type.follow());
   });
 
-	$scope.saveItem = function(cmd, url) {
+  $scope.openAddForm = function() {
+    $location.path("/create-item");
+	}
+
+  $scope.openEditForm = function(item) {
+
+		$scope.item.name = item.name;
+		$scope.item.code = item.code;
+    $scope.item.link = item.$link('self').resolvedUrl();
+
+		$location.path("/modify-item");
+	}
+
+  $scope.deleteItem = function(r) {
+
+		r.$delete();
+    $location.path("/hello");
+	}
+
+}]);
+
+app.controller("itemController", ['$scope', '$http', '$location','root', function($scope, $http, $location, root) {
+  $scope.type = root.$link('items');
+
+  $scope.createItem = function(item) {
 
 		var dataObject = {
-			name : $scope.item.name,
-			code : $scope.item.code
+			name : item.name,
+			code : item.code
 		};
 
-		if (cmd == "add") {
-
-			$http.post(url, dataObject);
-		} else {
-			$http.put(url, dataObject);
-		}
+		var url = $scope.type.resolvedUrl();
+		$http.post(url, dataObject);
 
 		$location.path("/");
 	};
 
-	$scope.deleteItem = function(url) {
+}]);
 
-		$http.delete(url);
+app.controller("itemEditController", ['$scope', '$http', '$location', function($scope, $http, $location) {
 
-	}
+  $scope.updateItem = function(item) {
 
-	$scope.openEditForm = function(item) {
+		var dataObject = {
+			name : item.name,
+			code : item.code
+		};
 
-		$scope.item.name = item.name;
-		$scope.item.code = item.code;
-		$scope.iUrl = item._links.self.href;
-		$scope.cmd = "edit";
+		var url = item.link;
+		$http.put(url, dataObject);
 
-		$location.path("/create-item");
-	}
+		$location.path("/");
+	};
 
-	$scope.openAddForm = function() {
-
-		$scope.cmd = "add";
-		$location.path("/create-item");
-	}
-
-});
+}]);
